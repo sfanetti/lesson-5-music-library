@@ -1,7 +1,10 @@
-import {useState, useRef } from 'react'
+import {useState, useRef, Fragment } from 'react'
 import Gallery from './components/Gallery'
 import Searchbar from './components/Searchbar'
 import { SearchContext } from './contexts/SearchContext'
+import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AlbumView from './components/AlbumView';
+import ArtistView from './components/ArtistView';
 
 function App() {
 	let [message, setMessage] = useState('Search for Music!')
@@ -32,12 +35,19 @@ function App() {
 			searchInput,
 			handleSearch
 		}}>
-			<div>
-				<h1>{searchInput.current}</h1>
-				<Searchbar/>
-				{message}
-				<Gallery data={data} />
-			</div>
+			{message}
+			<Router>
+				<Routes>
+					<Route path='/' element={
+						<Fragment>
+							<Searchbar/>
+							<Gallery data={data} />
+						</Fragment>
+					} />
+					<Route path='/album/:id' element={<AlbumView/>}/>
+					<Route path='/artist/:id' element={<ArtistView/>}/>
+				</Routes>
+			</Router>
 		</SearchContext.Provider>
   	);
 }
